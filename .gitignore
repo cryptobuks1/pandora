@@ -1,6 +1,1 @@
-.vscode
 .idea
-
-/contrib/conf.yml
-/contrib/docker/.env
-/contrib/docker/conf.yml
