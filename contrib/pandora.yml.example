@@ -1,6 +1,5 @@
 log_level: TRACE
 
 p2p:
-  listen_addresses:
-    - /ip4/127.0.0.1/tcp/2001
+  listen_address: /ip4/127.0.0.1/tcp/2001
   bootstrap_peer: /ip4/127.0.0.1/tcp/63785/p2p/QmWjz6xb8v9K4KnYEwP5Yk75k5mMBCehzWFLCvvQpYxF3d

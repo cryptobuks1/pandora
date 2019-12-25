@@ -59,7 +59,7 @@ var cli = &cobra.Command{
 }
 
 func main() {
-	cli.PersistentFlags().StringArray("listen", nil, "listen addresses")
+	cli.PersistentFlags().String("listen", "", "listen address")
 	cli.PersistentFlags().String("boot", "", "bootstrap peer")
 
 	if err := cli.Execute(); err != nil {

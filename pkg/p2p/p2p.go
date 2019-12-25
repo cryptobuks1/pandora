@@ -28,6 +28,7 @@ type Service struct {
 	sub    *pubsub.Subscription
 	pubsub *pubsub.PubSub
 	topic  *pubsub.Topic
+
 	logger zerolog.Logger
 }
 
@@ -45,7 +46,7 @@ func NewService() (*Service, error) {
 
 	security := libp2p.Security(secio.ID, secio.New)
 
-	listenAddrs := libp2p.ListenAddrStrings(cfg.Cfg.P2P.ListenAddresses...)
+	listenAddrs := libp2p.ListenAddrStrings(cfg.Cfg.P2P.ListenAddr)
 
 	var kademlia *dht.IpfsDHT
 	newKademlia := func(h host.Host) (routing.PeerRouting, error) {
@@ -108,7 +109,7 @@ func NewService() (*Service, error) {
 	if err != nil {
 		return nil, err
 	}
-	mdns.RegisterNotifee(&mdnsNotifee{h: host, ctx: context.TODO(), logger: logger})
+	mdns.RegisterNotifee(&mdnsNotifee{h: host, logger: logger})
 
 	if err := kademlia.Bootstrap(context.TODO()); err != nil {
 		return nil, err

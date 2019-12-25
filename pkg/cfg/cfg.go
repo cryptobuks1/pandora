@@ -18,7 +18,7 @@ func Prepare(cmd *cobra.Command) error {
 	v.AddConfigPath("./")
 	v.AddConfigPath("./contrib/")
 
-	_ = v.BindPFlag("p2p.listen_addresses", cmd.Flags().Lookup("listen"))
+	_ = v.BindPFlag("p2p.listen_addr", cmd.Flags().Lookup("listen"))
 	_ = v.BindPFlag("p2p.bootstrap_peer", cmd.Flags().Lookup("boot"))
 
 	if err := v.ReadInConfig(); err != nil {

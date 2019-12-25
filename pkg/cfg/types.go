@@ -6,6 +6,6 @@ type Config struct {
 }
 
 type P2P struct {
-	ListenAddresses []string `mapstructure:"listen_addresses"`
-	BootstrapPeer   string   `mapstructure:"bootstrap_peer"`
+	ListenAddr    string `mapstructure:"listen_addr"`
+	BootstrapPeer string `mapstructure:"bootstrap_peer"`
 }

@@ -9,13 +9,13 @@ import (
 )
 
 type mdnsNotifee struct {
-	h      host.Host
-	ctx    context.Context
+	h host.Host
+
 	logger zerolog.Logger
 }
 
 func (m *mdnsNotifee) HandlePeerFound(pi peer.AddrInfo) {
-	if err := m.h.Connect(m.ctx, pi); err != nil {
+	if err := m.h.Connect(context.TODO(), pi); err != nil {
 		m.logger.Err(err).Msg("establishing connection between host and peer error")
 	}
 }
