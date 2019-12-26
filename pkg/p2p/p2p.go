@@ -42,6 +42,7 @@ func NewService() (*Service, error) {
 		return nil, err
 	}
 
+	// TODO move kademlia and routing initialization to separate function
 	var kademlia *dht.IpfsDHT
 	newKademlia := func(h host.Host) (routing.PeerRouting, error) {
 		var err error
@@ -152,8 +153,8 @@ func (s *Service) connectToBootstrapPeer() error {
 		if err := s.host.Connect(context.TODO(), *peerInfo); err != nil {
 			return err
 		}
-		s.logger.Debug().Msgf("connected to bootstrap peer %s:%s", peerInfo.ID, peerInfo.Addrs[0])
 
+		s.logger.Debug().Msgf("connected to bootstrap peer %s:%s", peerInfo.ID, peerInfo.Addrs[0])
 		return nil
 	}
 
