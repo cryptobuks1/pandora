@@ -176,8 +176,5 @@ func (s *Service) Run() {
 	go inputLoop(s.topic, s.logger, doneC)
 	go pubSubHandler(s.sub, s.logger)
 
-	select {
-	case <-doneC:
-		return
-	}
+	<-doneC
 }
