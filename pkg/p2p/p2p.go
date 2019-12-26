@@ -3,7 +3,6 @@ package p2p
 import (
 	"context"
 	"encoding/hex"
-	"fmt"
 	"time"
 
 	"github.com/libp2p/go-libp2p"
@@ -43,10 +42,13 @@ func NewService() (*Service, error) {
 		return nil, err
 	}
 
-	routing, kademlia, err := s.prepareRouting()
-	if err != nil {
-		return nil, err
+	var kademlia *dht.IpfsDHT
+	newKademlia := func(h host.Host) (routing.PeerRouting, error) {
+		var err error
+		kademlia, err = dht.New(context.TODO(), h)
+		return kademlia, err
 	}
+	routing := libp2p.Routing(newKademlia)
 
 	host, err := libp2p.New(
 		context.TODO(),
@@ -58,8 +60,6 @@ func NewService() (*Service, error) {
 		return nil, err
 	}
 	s.host = host
-
-	fmt.Println(kademlia)
 
 	if err := s.preparePubSub(); err != nil {
 		return nil, err
@@ -87,21 +87,6 @@ func (s *Service) prepareMDNS() error {
 	}
 	mdns.RegisterNotifee(&mdnsNotifee{h: s.host, logger: s.logger})
 	return nil
-}
-
-func (s *Service) prepareRouting() (libp2p.Option, *dht.IpfsDHT, error) {
-	var kademlia *dht.IpfsDHT
-
-	newKademlia := func(h host.Host) (routing.PeerRouting, error) {
-		var err error
-		kademlia, err = dht.New(context.TODO(), h)
-		return kademlia, err
-	}
-
-	routing := libp2p.Routing(newKademlia)
-	fmt.Println(kademlia)
-
-	return routing, kademlia, nil
 }
 
 func (s *Service) preparePubSub() error {
@@ -168,6 +153,8 @@ func (s *Service) connectToBootstrapPeer() error {
 			return err
 		}
 		s.logger.Debug().Msgf("connected to bootstrap peer %s:%s", peerInfo.ID, peerInfo.Addrs[0])
+
+		return nil
 	}
 
 	s.logger.Debug().Msg("there aren't any known bootstrap peers")
