@@ -8,4 +8,5 @@ type Config struct {
 type P2P struct {
 	ListenAddr    string `mapstructure:"listen_addr"`
 	BootstrapPeer string `mapstructure:"bootstrap_peer"`
+	PrivateKey    string `mapstructure:"private_key"`
 }

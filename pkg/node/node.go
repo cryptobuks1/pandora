@@ -8,7 +8,7 @@ type Service struct {
 	p2pService *p2p.Service
 }
 
-func New() (*Service, error) {
+func NewService() (*Service, error) {
 	p2pService, err := p2p.NewService()
 	if err != nil {
 		return nil, err
@@ -19,8 +19,9 @@ func New() (*Service, error) {
 	}, nil
 }
 
-func (s *Service) Run() {
+func (s *Service) Run() error {
 	s.p2pService.Run()
+	return nil
 }
 
 func (s *Service) Close() {
