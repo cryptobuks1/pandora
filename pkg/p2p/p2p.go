@@ -162,13 +162,13 @@ func (s *Service) connectToBootstrapPeer() error {
 	return nil
 }
 
-func (s *Service) Close() {
+func (s *Service) Stop() {
 	if err := s.host.Close(); err != nil {
 		s.logger.Err(err).Msg("close host error")
 	}
 }
 
-func (s *Service) Run() {
+func (s *Service) Start() {
 	s.logger.Debug().Msgf("node %s listening on %s", s.host.ID(), s.host.Addrs()[0])
 
 	doneC := make(chan struct{})

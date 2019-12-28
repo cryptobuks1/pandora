@@ -3,8 +3,10 @@ module pandora
 go 1.13
 
 require (
+	github.com/gorilla/handlers v1.4.2
 	github.com/ipfs/go-log v1.0.0 // indirect
 	github.com/jackpal/go-nat-pmp v1.0.2 // indirect
+	github.com/julienschmidt/httprouter v1.2.0
 	github.com/libp2p/go-libp2p v0.5.0
 	github.com/libp2p/go-libp2p-core v0.3.0
 	github.com/libp2p/go-libp2p-kad-dht v0.4.1

@@ -30,9 +30,7 @@ func Cmd() *cobra.Command {
 			}
 
 			go func() {
-				if err := nodeService.Run(); err != nil {
-					log.Fatal().Err(err).Msg("run node error")
-				}
+				nodeService.Start()
 			}()
 
 			interrupt := make(chan os.Signal, 1)
@@ -40,7 +38,7 @@ func Cmd() *cobra.Command {
 			<-interrupt
 			log.Info().Msg("handle SIGINT, SIGTERM, SIGQUIT")
 
-			nodeService.Close()
+			nodeService.Stop()
 		},
 	}
 
@@ -48,6 +46,7 @@ func Cmd() *cobra.Command {
 	cmd.PersistentFlags().String("boot", "", "bootstrap peer")
 	cmd.PersistentFlags().String("log_level", "", "log level")
 	cmd.PersistentFlags().String("private", "", "private key")
+	cmd.PersistentFlags().Int("http_port", 0, "api http port")
 
 	return cmd
 }
