@@ -20,7 +20,7 @@ jobs:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
       - name: test
-        run: go test -cover ./...
+        run: ./test/run-tests.sh
 
   analyze:
     name: analyze
