@@ -21,7 +21,7 @@ import (
 	"pandora/pkg/constants"
 )
 
-type Service struct {
+type Server struct {
 	host  host.Host
 	sub   *pubsub.Subscription
 	topic *pubsub.Topic
@@ -29,69 +29,67 @@ type Service struct {
 	logger zerolog.Logger
 }
 
-func NewService() (*Service, error) {
-	s := &Service{}
+func NewServer() (*Server, error) {
+	srv := &Server{}
 
-	logger := log.Logger.With().Str(constants.LoggerComponentKey, "p2p").Logger()
-	s.logger = logger
+	srv.logger = log.Logger.With().Str(constants.LoggerComponentKey, "p2p").Logger()
 
 	listenAddrs := libp2p.ListenAddrStrings(cfg.Cfg.P2P.ListenAddr)
 
-	identity, err := s.prepareIdentity()
+	identity, err := srv.prepareIdentity()
 	if err != nil {
 		return nil, err
 	}
 
-	// TODO move kademlia and routing initialization to separate function
-	var kademlia *dht.IpfsDHT
-	newKademlia := func(h host.Host) (routing.PeerRouting, error) {
+	var kad *dht.IpfsDHT
+	newKad := func(h host.Host) (routing.PeerRouting, error) {
 		var err error
-		kademlia, err = dht.New(context.TODO(), h)
-		return kademlia, err
+		kad, err = dht.New(context.TODO(), h)
+		return kad, err
 	}
-	routing := libp2p.Routing(newKademlia)
+	rtg := libp2p.Routing(newKad)
 
-	host, err := libp2p.New(
+	hst, err := libp2p.New(
 		context.TODO(),
 		identity,
 		listenAddrs,
-		routing,
+		rtg,
 	)
 	if err != nil {
 		return nil, err
 	}
-	s.host = host
+	srv.host = hst
 
-	if err := s.preparePubSub(); err != nil {
+	if err := srv.preparePubSub(); err != nil {
 		return nil, err
 	}
 
-	if err := s.connectToBootstrapPeer(); err != nil {
+	if err := srv.connectToBootstrapPeer(); err != nil {
 		return nil, err
 	}
 
-	if err := s.prepareMDNS(); err != nil {
+	if err := srv.prepareMDNS(); err != nil {
 		return nil, err
 	}
 
-	if err := kademlia.Bootstrap(context.TODO()); err != nil {
+	if err := kad.Bootstrap(context.TODO()); err != nil {
 		return nil, err
 	}
 
-	return s, nil
+	return srv, nil
 }
 
-func (s *Service) prepareMDNS() error {
-	mdns, err := discovery.NewMdnsService(context.TODO(), s.host, time.Second*10, "")
+func (srv *Server) prepareMDNS() error {
+	mdns, err := discovery.NewMdnsService(context.TODO(), srv.host, time.Second*10, "")
 	if err != nil {
 		return err
 	}
-	mdns.RegisterNotifee(&mdnsNotifee{h: s.host, logger: s.logger})
+	mdns.RegisterNotifee(&mdnsNotifee{host: srv.host, logger: srv.logger})
 	return nil
 }
 
-func (s *Service) preparePubSub() error {
-	pubSub, err := pubsub.NewGossipSub(context.TODO(), s.host)
+func (srv *Server) preparePubSub() error {
+	pubSub, err := pubsub.NewGossipSub(context.TODO(), srv.host)
 	if err != nil {
 		return err
 	}
@@ -100,18 +98,18 @@ func (s *Service) preparePubSub() error {
 	if err != nil {
 		return err
 	}
-	s.topic = topic
+	srv.topic = topic
 
 	sub, err := topic.Subscribe()
 	if err != nil {
 		return err
 	}
-	s.sub = sub
+	srv.sub = sub
 
 	return nil
 }
 
-func (s *Service) prepareIdentity() (libp2p.Option, error) {
+func (srv *Server) prepareIdentity() (libp2p.Option, error) {
 	identity := func(privateKey crypto.PrivKey) libp2p.Option {
 		return libp2p.Identity(privateKey)
 	}
@@ -138,7 +136,7 @@ func (s *Service) prepareIdentity() (libp2p.Option, error) {
 	return identity(privateKey), nil
 }
 
-func (s *Service) connectToBootstrapPeer() error {
+func (srv *Server) connectToBootstrapPeer() error {
 	if cfg.Cfg.P2P.BootstrapPeer != "" {
 		multiAddr, err := multiaddr.NewMultiaddr(cfg.Cfg.P2P.BootstrapPeer)
 		if err != nil {
@@ -150,31 +148,31 @@ func (s *Service) connectToBootstrapPeer() error {
 			return err
 		}
 
-		if err := s.host.Connect(context.TODO(), *peerInfo); err != nil {
+		if err := srv.host.Connect(context.TODO(), *peerInfo); err != nil {
 			return err
 		}
 
-		s.logger.Debug().Msgf("connected to bootstrap peer %s:%s", peerInfo.ID, peerInfo.Addrs[0])
+		srv.logger.Debug().Msgf("connected to bootstrap peer %s:%s", peerInfo.ID, peerInfo.Addrs[0])
 		return nil
 	}
 
-	s.logger.Debug().Msg("there aren't any known bootstrap peers")
+	srv.logger.Debug().Msg("there aren't any known bootstrap peers")
 	return nil
 }
 
-func (s *Service) Stop() {
-	if err := s.host.Close(); err != nil {
-		s.logger.Err(err).Msg("close host error")
+func (srv *Server) Stop() {
+	if err := srv.host.Close(); err != nil {
+		srv.logger.Err(err).Msg("close host error")
 	}
 }
 
-func (s *Service) Start() {
-	s.logger.Debug().Msgf("node %s listening on %s", s.host.ID(), s.host.Addrs()[0])
+func (srv *Server) Start() {
+	srv.logger.Debug().Msgf("node %s listening on %s", srv.host.ID(), srv.host.Addrs()[0])
 
 	doneC := make(chan struct{})
 
-	go inputLoop(s.topic, s.logger, doneC)
-	go pubSubHandler(s.sub, s.logger)
+	go inputLoop(srv.topic, srv.logger, doneC)
+	go pubSubHandler(srv.sub, srv.logger)
 
 	<-doneC
 }

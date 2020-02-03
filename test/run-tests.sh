@@ -8,7 +8,10 @@ go test \
   -c -covermode=count -coverpkg ./pkg/...,./cmd/node \
   ./cmd/node/ || exit
 
-# TODO `|| true` here is incorrect but we need delete test binary and coverage file after tests
-go test -v -timeout 10m -count=1 ./test/node/ || true
+if eval go test -v -race -timeout 10m -count=1 ./test/node/; then
+  echo "TESTS ARE OK"
+else
+  echo "TESTS AREN'T OK"
+fi
 
 rm -rf ./test/node/coverage.out ./test/node/node.test || exit

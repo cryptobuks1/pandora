@@ -6,10 +6,10 @@ jobs:
     name: test
     runs-on: ubuntu-latest
     steps:
-      - name: set up go 1.13.5
+      - name: set up go 1.13.7
         uses: actions/setup-go@v1
         with:
-          go-version: 1.13.5
+          go-version: 1.13.7
         id: go
       - name: check out code
         uses: actions/checkout@v1
@@ -26,14 +26,14 @@ jobs:
     name: analyze
     runs-on: ubuntu-latest
     steps:
-      - name: set up go 1.13.5
+      - name: set up go 1.13.7
         uses: actions/setup-go@v1
         with:
-          go-version: 1.13.5
+          go-version: 1.13.7
         id: go
       - name: check out code
         uses: actions/checkout@v1
       - name: install golangci-lint
-        run: curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(go env GOPATH)/bin v1.21.0
+        run: curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(go env GOPATH)/bin v1.23.2
       - name: run golangci-lint
         run: $(go env GOPATH)/bin/golangci-lint run ./...

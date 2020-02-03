@@ -7,36 +7,36 @@ import (
 	"pandora/pkg/p2p"
 )
 
-type Service struct {
-	p2pService *p2p.Service
-	apiService *api.Service
+type Node struct {
+	p2pSrv *p2p.Server
+	apiSrv *api.Server
 }
 
-func NewService() (*Service, error) {
-	p2pService, err := p2p.NewService()
+func NewNode() (*Node, error) {
+	p2pSrv, err := p2p.NewServer()
 	if err != nil {
 		return nil, err
 	}
 
-	apiService := api.NewService()
+	apiSrv := api.NewServer()
 
-	return &Service{
-		apiService: apiService,
-		p2pService: p2pService,
+	return &Node{
+		apiSrv: apiSrv,
+		p2pSrv: p2pSrv,
 	}, nil
 }
 
-func (s *Service) Start() {
+func (n *Node) Start() {
 	go func() {
-		if err := s.apiService.Start(); err != nil {
+		if err := n.apiSrv.Start(); err != nil {
 			log.Err(err).Msg("running api service error")
 		}
 	}()
 
-	s.p2pService.Start()
+	n.p2pSrv.Start()
 }
 
-func (s *Service) Stop() {
-	s.p2pService.Stop()
-	s.apiService.Stop()
+func (n *Node) Stop() {
+	n.p2pSrv.Stop()
+	n.apiSrv.Stop()
 }

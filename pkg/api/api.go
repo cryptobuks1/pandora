@@ -1,31 +1,30 @@
 package api
 
 import (
+	"pandora/pkg/api/utils"
 	"pandora/pkg/cfg"
-	"pandora/pkg/utils/pndrhttp"
 )
 
-type Service struct {
+type Server struct {
 	healthController *HealthController
 
-	httpServer *pndrhttp.Server
+	httpSrv *utils.Server
 }
 
-func NewService() *Service {
-	s := &Service{}
+func NewServer() *Server {
+	srv := &Server{}
 
-	s.healthController = NewHealthController()
+	srv.healthController = NewHealthController()
 
-	httpServer := pndrhttp.NewServer(cfg.Cfg.API.Port, s.routes())
-	s.httpServer = httpServer
+	srv.httpSrv = utils.NewServer(cfg.Cfg.API.Port, srv.routes())
 
-	return s
+	return srv
 }
 
-func (s *Service) Start() error {
-	return s.httpServer.Start()
+func (srv *Server) Start() error {
+	return srv.httpSrv.Start()
 }
 
-func (s *Service) Stop() {
-	s.httpServer.Stop()
+func (srv *Server) Stop() {
+	srv.httpSrv.Stop()
 }

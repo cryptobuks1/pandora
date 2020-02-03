@@ -24,13 +24,13 @@ func Cmd() *cobra.Command {
 		},
 
 		Run: func(cmd *cobra.Command, args []string) {
-			nodeService, err := node.NewService()
+			nod, err := node.NewNode()
 			if err != nil {
 				log.Fatal().Err(err).Msg("initialize node service error")
 			}
 
 			go func() {
-				nodeService.Start()
+				nod.Start()
 			}()
 
 			interrupt := make(chan os.Signal, 1)
@@ -38,7 +38,7 @@ func Cmd() *cobra.Command {
 			<-interrupt
 			log.Info().Msg("handle SIGINT, SIGTERM, SIGQUIT")
 
-			nodeService.Stop()
+			nod.Stop()
 		},
 	}
 
