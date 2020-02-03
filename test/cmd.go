@@ -1,4 +1,4 @@
-package utils
+package test
 
 import (
 	"bufio"
@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-func ExecCmd(logPrefix string, cmd *exec.Cmd) error {
+func execCmd(logPrefix string, cmd *exec.Cmd) error {
 	stdoutReader, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
