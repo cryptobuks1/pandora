@@ -5,7 +5,7 @@ Blockchain-based decentralized platform for issuing, verifying and recovering di
 ### Usage
 
 #### Node
-To run node use following command from the root pandora dir.
+To run nodes use following commands from the root pandora dir.
 ```
 # start node-1
 go run ./cmd/node \
