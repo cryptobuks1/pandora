@@ -24,5 +24,5 @@ if [ $TESTS_PASSED = true ]; then
   exit 0
 else
   echo "TESTS DIDN'T PASS"
-  echo 1
+  exit 1
 fi
