@@ -2,6 +2,7 @@ package logger
 
 import (
 	"os"
+	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -17,7 +18,7 @@ func init() {
 }
 
 func Initialize() {
-	level, err := zerolog.ParseLevel(cfg.Cfg.LogLevel)
+	level, err := zerolog.ParseLevel(strings.ToLower(cfg.Cfg.LogLevel))
 	if err != nil {
 		log.Warn().Msgf("error while parse log level (%s) setting up default level (%s)", cfg.Cfg.LogLevel, defaultLevel)
 		setLogLevel(defaultLevel)

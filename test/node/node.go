@@ -1,10 +1,12 @@
-package test
+package node
 
 import (
 	"os"
 	"os/exec"
 	"path/filepath"
 	"syscall"
+
+	"pandora/test/utils"
 )
 
 type node struct {
@@ -12,7 +14,7 @@ type node struct {
 	pid int
 }
 
-func newNode() *node {
+func NewNode() *node {
 	m := &node{}
 	m.cmd = m.prepareCommand()
 	return m
@@ -31,15 +33,15 @@ func (n *node) prepareCommand() *exec.Cmd {
 	return cmd
 }
 
-func (n *node) start() error {
-	if err := execCmd("node", n.cmd); err != nil {
+func (n *node) Start() error {
+	if err := utils.ExecCmd("node", n.cmd); err != nil {
 		return err
 	}
 	n.pid = n.cmd.Process.Pid
 	return nil
 }
 
-func (n *node) stop() error {
+func (n *node) Stop() error {
 	if n == nil || n.cmd == nil || n.cmd.Process == nil {
 		return nil
 	}

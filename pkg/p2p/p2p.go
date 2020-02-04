@@ -30,9 +30,9 @@ type Server struct {
 }
 
 func NewServer() (*Server, error) {
-	srv := &Server{}
-
-	srv.logger = log.Logger.With().Str(constants.LoggerComponentKey, "p2p").Logger()
+	srv := &Server{
+		logger: log.Logger.With().Str(constants.LoggerComponentKey, "p2p").Logger(),
+	}
 
 	listenAddrs := libp2p.ListenAddrStrings(cfg.Cfg.P2P.ListenAddr)
 

@@ -42,9 +42,9 @@ func Cmd() *cobra.Command {
 		},
 	}
 
+	cmd.PersistentFlags().String("log_level", "", "log level")
 	cmd.PersistentFlags().String("listen", "", "listen address")
 	cmd.PersistentFlags().String("boot", "", "bootstrap peer")
-	cmd.PersistentFlags().String("log_level", "", "log level")
 	cmd.PersistentFlags().String("private", "", "private key")
 	cmd.PersistentFlags().Int("http_port", 0, "api http port")
 

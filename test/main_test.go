@@ -6,14 +6,16 @@ import (
 	"os"
 	"testing"
 	"time"
+
+	"pandora/test/node"
 )
 
 func TestMain(m *testing.M) {
 	failed := false
 
-	node := newNode()
+	nod := node.NewNode()
 
-	if err := node.start(); err != nil {
+	if err := nod.Start(); err != nil {
 		log.Fatal(err)
 	}
 
@@ -26,7 +28,7 @@ func TestMain(m *testing.M) {
 
 	time.Sleep(time.Second * 5)
 
-	if err := node.stop(); err != nil {
+	if err := nod.Stop(); err != nil {
 		log.Fatal(err)
 	}
 

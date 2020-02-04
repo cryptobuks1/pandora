@@ -10,6 +10,6 @@ type HealthController struct{}
 
 func NewHealthController() *HealthController { return &HealthController{} }
 
-func (*HealthController) LiveH(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
+func (*HealthController) HealthH(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 	w.WriteHeader(http.StatusOK)
 }
