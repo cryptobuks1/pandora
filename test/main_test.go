@@ -26,8 +26,6 @@ func TestMain(m *testing.M) {
 		failed = true
 	}
 
-	time.Sleep(time.Second * 5)
-
 	if err := nod.Stop(); err != nil {
 		log.Fatal(err)
 	}
