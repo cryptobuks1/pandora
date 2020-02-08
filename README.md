@@ -25,5 +25,5 @@ go run ./cmd/node \
 #### Tests
 To run tests use following command from the root pandora dir.
 ```
-./test/run.sh
+go test -count=1 -race -cover ./...
 ```
