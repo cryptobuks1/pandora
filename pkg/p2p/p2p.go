@@ -17,7 +17,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"pandora/pkg/cfg"
+	"pandora/pkg/config"
 	"pandora/pkg/constants"
 )
 
@@ -34,7 +34,7 @@ func NewServer() (*Server, error) {
 		logger: log.Logger.With().Str(constants.LoggerComponentKey, "p2p").Logger(),
 	}
 
-	listenAddrs := libp2p.ListenAddrStrings(cfg.Cfg.P2P.ListenAddr)
+	listenAddrs := libp2p.ListenAddrStrings(config.Cfg.P2P.ListenAddr)
 
 	identity, err := srv.prepareIdentity()
 	if err != nil {
@@ -114,8 +114,8 @@ func (srv *Server) prepareIdentity() (libp2p.Option, error) {
 		return libp2p.Identity(privateKey)
 	}
 
-	if cfg.Cfg.P2P.PrivateKey != "" {
-		privateKeyBuf, err := hex.DecodeString(cfg.Cfg.P2P.PrivateKey)
+	if config.Cfg.P2P.PrivateKey != "" {
+		privateKeyBuf, err := hex.DecodeString(config.Cfg.P2P.PrivateKey)
 		if err != nil {
 			return nil, err
 		}
@@ -137,8 +137,8 @@ func (srv *Server) prepareIdentity() (libp2p.Option, error) {
 }
 
 func (srv *Server) connectToBootstrapPeer() error {
-	if cfg.Cfg.P2P.BootstrapPeer != "" {
-		multiAddr, err := multiaddr.NewMultiaddr(cfg.Cfg.P2P.BootstrapPeer)
+	if config.Cfg.P2P.BootstrapPeer != "" {
+		multiAddr, err := multiaddr.NewMultiaddr(config.Cfg.P2P.BootstrapPeer)
 		if err != nil {
 			return err
 		}

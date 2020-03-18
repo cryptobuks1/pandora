@@ -8,7 +8,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 
-	"pandora/pkg/cfg"
+	"pandora/pkg/config"
 	"pandora/pkg/logger"
 	"pandora/pkg/node"
 )
@@ -16,7 +16,7 @@ import (
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			if err := cfg.Prepare(cmd); err != nil {
+			if err := config.Prepare(cmd); err != nil {
 				log.Fatal().Err(err).Msg("prepare config file error")
 			}
 

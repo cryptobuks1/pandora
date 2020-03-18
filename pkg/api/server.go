@@ -12,7 +12,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"pandora/pkg/cfg"
+	"pandora/pkg/config"
 	"pandora/pkg/constants"
 )
 
@@ -36,7 +36,7 @@ func NewServer() *Server {
 		logger: log.Logger.With().Str(constants.LoggerComponentKey, "api").Logger(),
 	}
 
-	endpoint := fmt.Sprintf("127.0.0.1:%d", cfg.Cfg.API.Port)
+	endpoint := fmt.Sprintf("127.0.0.1:%d", config.Cfg.API.Port)
 
 	router := httprouter.New()
 

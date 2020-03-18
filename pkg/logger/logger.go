@@ -8,7 +8,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"pandora/pkg/cfg"
+	"pandora/pkg/config"
 )
 
 const defaultLevel = zerolog.TraceLevel
@@ -18,9 +18,9 @@ func init() {
 }
 
 func Initialize() {
-	level, err := zerolog.ParseLevel(strings.ToLower(cfg.Cfg.LogLevel))
+	level, err := zerolog.ParseLevel(strings.ToLower(config.Cfg.LogLevel))
 	if err != nil {
-		log.Warn().Msgf("error while parse log level (%s) setting up default level (%s)", cfg.Cfg.LogLevel, defaultLevel)
+		log.Warn().Msgf("error while parse log level (%s) setting up default level (%s)", config.Cfg.LogLevel, defaultLevel)
 		setLogLevel(defaultLevel)
 		return
 	}

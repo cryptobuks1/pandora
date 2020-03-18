@@ -1,4 +1,4 @@
-package cfg
+package config
 
 type Config struct {
 	LogLevel string `mapstructure:"log_level"`
