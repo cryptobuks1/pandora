@@ -33,6 +33,7 @@ func (n *Node) Start() {
 		}
 	}()
 
+	// TODO run in the goroutine
 	n.p2pSrv.Start()
 }
 
